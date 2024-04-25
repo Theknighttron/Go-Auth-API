@@ -9,19 +9,31 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
+	"github.com/polyhistor2050/Go-Auth-API/internal/database"
+
+	_ "github.com/lib/pq"
 )
+
+type apiConfig struct {
+	DB *database.Queries
+}
 
 func main() {
 
 	// Load the .env file
 	godotenv.Load()
 
-	portString := os.Getenv("PORT")
-	if portString == "" {
-		log.Fatal("PORT is not found in the environment")
+	dbURL := os.Getenv("DB_URL")
+	if dbURL == "" {
+		log.Fatal("DB_URL is not found in the environment")
 	}
 
-	fmt.Println("Port:", portString)
+	fmt.Println("Port:", dbURL)
+
+	conn, err := sql.Open("mysql", dbURL)
+	if err != nil {
+		log.Fatal("Can't connect to the database: ", err)
+	}
 
 	// Create a new router object
 	router := chi.NewRouter()
