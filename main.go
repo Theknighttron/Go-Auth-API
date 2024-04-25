@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -57,18 +58,18 @@ func main() {
 
 	v1Router.Get("/test", handlerReadiness)
 	v1Router.Get("/err", handlerErr)
-
 	v1Router.Post("/register", registerHandler)
+	v1Router.Post("/users", apiCfg.handlerCreateUser)
 
 	router.Mount("/v1", v1Router)
 
 	server := &http.Server{
 		Handler: router,
-		Addr:    ":" + portString,
+		Addr:    ":" + dbURL,
 	}
 
-	log.Printf("Server is running on port %v", portString)
-	err := server.ListenAndServe()
+	log.Printf("Server is running on port %v", dbURL)
+	err = server.ListenAndServe()
 	if err != nil {
 		log.Fatal(err)
 	}
