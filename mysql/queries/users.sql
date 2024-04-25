@@ -1,6 +1,5 @@
--- +goose Up
-
-CREATE TABLE register(
+-- name: CreateAuthor :execresult
+CREATE TABLE Users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     Firstname VARCHAR(255) NOT NULL,
     Lastname VARCHAR(255) NOT NULL,
@@ -11,6 +10,8 @@ CREATE TABLE register(
     Email VARCHAR(255) NOT NULL
 );
 
-
--- +goose down
-DROP TABLE register;
+INSERT INTO register(
+  id, Fistname, Lastname, Gender, StudentId, Course, Level, Email
+) VALUES (
+  ?, ?, ?, ?, ?, ?, ?, ?
+);
