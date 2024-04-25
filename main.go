@@ -36,13 +36,9 @@ func main() {
 		log.Fatal("Can't connect to the database: ", err)
 	}
 
-	// Converting queries from sql to database
-	queries, err := database.New(conn)
-	if err != nil {
-		log.Fatal("Can't create to db connection: ", err)
+	apiCfg := apiConfig{
+		DB: database.New(conn),
 	}
-
-	apiCfg := apiConfig{}
 
 	// Create a new router object
 	router := chi.NewRouter()
