@@ -41,6 +41,8 @@ func main() {
 	v1Router.Get("/test", handlerReadiness)
 	v1Router.Get("/err", handlerErr)
 
+	v1Router.Post("/register", registerHandler)
+
 	router.Mount("/v1", v1Router)
 
 	server := &http.Server{
