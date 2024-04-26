@@ -6,12 +6,14 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
 	"github.com/polyhistor2050/Go-Auth-API/internal/database"
 
+	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
 )
 
@@ -29,6 +31,23 @@ func main() {
 		log.Fatal("DB_URL is not found in the environment")
 	}
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("PORT is not found in the environment")
+	}
+
+	// Extract port number from dbURL
+	dbParts := strings.Split(dbURL, ":")
+	if len(dbParts) < 2 {
+		log.Fatal("Invalid DB_URL format")
+	}
+
+	portParts := strings.Split(dbParts[1], "@")
+	if len(portParts) < 2 {
+		log.Fatal("Invalid DB_URL format")
+	}
+
+	fmt.Println("Port:", portParts[0]) // Debug statement
 	fmt.Println("Port:", dbURL)
 
 	// Make connection to the database
@@ -58,14 +77,17 @@ func main() {
 
 	v1Router.Get("/test", handlerReadiness)
 	v1Router.Get("/err", handlerErr)
-	v1Router.Post("/register", registerHandler)
 	v1Router.Post("/users", apiCfg.handlerCreateUser)
 
 	router.Mount("/v1", v1Router)
 
+	// Construct the server address
+	addr := ":" + port
+
+	// Create the server
 	server := &http.Server{
 		Handler: router,
-		Addr:    ":" + dbURL,
+		Addr:    addr,
 	}
 
 	log.Printf("Server is running on port %v", dbURL)

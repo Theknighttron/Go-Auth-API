@@ -1,5 +1,5 @@
--- name: CreateAuthor :execresult
-CREATE TABLE Users (
+-- name: CreateUser :one
+CREATE TABLE IF NOT EXISTS register (
     id INT AUTO_INCREMENT PRIMARY KEY,
     Firstname VARCHAR(255) NOT NULL,
     Lastname VARCHAR(255) NOT NULL,
@@ -14,4 +14,5 @@ INSERT INTO register(
   id, Fistname, Lastname, Gender, StudentId, Course, Level, Email
 ) VALUES (
   ?, ?, ?, ?, ?, ?, ?, ?
-);
+)
+RETURNING *;

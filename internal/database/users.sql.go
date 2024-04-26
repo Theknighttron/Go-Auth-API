@@ -7,11 +7,10 @@ package database
 
 import (
 	"context"
-	"database/sql"
 )
 
-const createAuthor = `-- name: CreateAuthor :execresult
-CREATE TABLE Users (
+const createUser = `-- name: CreateUser :one
+CREATE TABLE register (
     id INT AUTO_INCREMENT PRIMARY KEY,
     Firstname VARCHAR(255) NOT NULL,
     Lastname VARCHAR(255) NOT NULL,
@@ -23,6 +22,11 @@ CREATE TABLE Users (
 )
 `
 
-func (q *Queries) CreateAuthor(ctx context.Context) (sql.Result, error) {
-	return q.db.ExecContext(ctx, createAuthor)
+type CreateUserRow struct {
+}
+func (q *Queries) CreateUser(ctx context.Context, args CreateUserParams) (CreateUserRow, error) {
+	row := q.db.QueryRowContext(ctx, createUser)
+	var i CreateUserRow
+	err := row.Scan()
+	return i, err
 }
